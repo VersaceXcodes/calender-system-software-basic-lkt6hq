@@ -1,0 +1,19 @@
+{
+  "timestamp": 1747751504443,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_Profile",
+      "version": "1747751327002"
+    }
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/vitereact/src/components/views/UV_Profile.tsx",
+      "type": "text",
+      "size": 8868,
+      "dependencies": false
+    }
+  ]
+}

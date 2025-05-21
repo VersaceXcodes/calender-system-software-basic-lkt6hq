@@ -1,0 +1,223 @@
+asyncapi: 2.0.0
+info:
+  title: SimpleCal Realtime Events API
+  version: 1.0.0
+  description: >
+    This AsyncAPI document defines the realtime WebSocket events for SimpleCal,
+    a calendar scheduling application. It covers live slot locking, appointment
+    creation, appointment updates, and availability updates, ensuring that
+    organizers and invitees receive immediate, consistent feedback as
+    appointments are booked, modified, or cancelled.
+servers:
+  development:
+    url: ws://localhost:3000
+    protocol: ws
+channels:
+  /ws/slot_locked:
+    subscribe:
+      operationId: subscribe_slot_locked
+      summary: Receive slot locked events
+      description: >
+        Emitted when an invitee selects a time slot to be booked. The slot is
+        temporarily locked to prevent double-booking for a duration defined by
+        lock_expires_at.
+      message:
+        contentType: application/json
+        payload:
+          $ref: "#/components/schemas/slot_locked"
+  /ws/appointment_created:
+    subscribe:
+      operationId: subscribe_appointment_created
+      summary: Receive appointment created events
+      description: >
+        Emitted when an appointment is successfully booked and recorded in the
+        system. Contains complete appointment details to update dashboards and
+        user interfaces in realtime.
+      message:
+        contentType: application/json
+        payload:
+          $ref: "#/components/schemas/appointment_created"
+  /ws/appointment_updated:
+    subscribe:
+      operationId: subscribe_appointment_updated
+      summary: Receive appointment updated events
+      description: >
+        Emitted when an appointment is rescheduled or cancelled. Provides
+        updated information so connected clients can refresh their views
+        accordingly.
+      message:
+        contentType: application/json
+        payload:
+          $ref: "#/components/schemas/appointment_updated"
+  /ws/availability_updated:
+    subscribe:
+      operationId: subscribe_availability_updated
+      summary: Receive availability updated events
+      description: >
+        Emitted when an organizer updates their recurring availability or
+        exceptions. Notifies all active public scheduling pages to recalculate
+        available time slots.
+      message:
+        contentType: application/json
+        payload:
+          $ref: "#/components/schemas/availability_updated"
+components:
+  schemas:
+    slot_locked:
+      type: object
+      description: Data structure for a locked slot event.
+      required:
+        - organizer_id
+        - slot_start
+        - slot_end
+        - lock_expires_at
+      properties:
+        organizer_id:
+          type: string
+          description: Unique identifier for the organizer.
+        slot_start:
+          type: string
+          format: date-time
+          description: ISO 8601 formatted start time of the locked slot.
+        slot_end:
+          type: string
+          format: date-time
+          description: ISO 8601 formatted end time of the locked slot.
+        lock_expires_at:
+          type: string
+          format: date-time
+          description: ISO 8601 formatted time when the slot lock expires.
+    appointment_created:
+      type: object
+      description: Data structure for new appointment events.
+      required:
+        - appointment_id
+        - organizer_id
+        - meeting_type_id
+        - slot_start
+        - slot_end
+        - status
+        - invitee
+      properties:
+        appointment_id:
+          type: string
+          description: Unique identifier for the appointment.
+        organizer_id:
+          type: string
+          description: Unique identifier for the organizer.
+        meeting_type_id:
+          type: string
+          description: Identifier of the meeting type selected.
+        slot_start:
+          type: string
+          format: date-time
+          description: Appointment start time in ISO 8601 format.
+        slot_end:
+          type: string
+          format: date-time
+          description: Appointment end time in ISO 8601 format.
+        status:
+          type: string
+          description: Status of the appointment (e.g., "booked").
+        invitee:
+          type: object
+          description: Details of the invitee who booked the appointment.
+          required:
+            - name
+            - email
+          properties:
+            name:
+              type: string
+              description: Full name of the invitee.
+            email:
+              type: string
+              format: email
+              description: Email address of the invitee.
+            phone:
+              type: string
+              description: Optional phone number of the invitee.
+    appointment_updated:
+      type: object
+      description: Data structure for appointment update events.
+      required:
+        - appointment_id
+        - updated_fields
+        - timestamp
+      properties:
+        appointment_id:
+          type: string
+          description: Unique identifier for the appointment.
+        updated_fields:
+          type: object
+          description: Object containing the fields that have been updated.
+          properties:
+            status:
+              type: string
+              description: New status of the appointment (e.g., "canceled", "rescheduled").
+            slot_start:
+              type: string
+              format: date-time
+              description: Updated start time in ISO 8601 format.
+            slot_end:
+              type: string
+              format: date-time
+              description: Updated end time in ISO 8601 format.
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 formatted time when the update occurred.
+    availability_updated:
+      type: object
+      description: Data structure for availability update events.
+      required:
+        - user_id
+        - type
+        - updated_entry
+        - timestamp
+      properties:
+        user_id:
+          type: string
+          description: Unique identifier of the organizer.
+        type:
+          type: string
+          enum:
+            - recurring
+            - exception
+          description: Indicates the type of availability update ("recurring" or
+            "exception").
+        updated_entry:
+          type: object
+          description: Contains the complete details of the updated availability entry.
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the availability record.
+            day_of_week:
+              type: number
+              description: Day of the week for recurring availability (0 for Sunday to 6 for
+                Saturday).
+            start_time:
+              type: string
+              description: Start time in HH:MM format.
+            end_time:
+              type: string
+              description: End time in HH:MM format.
+            buffer_before:
+              type: number
+              description: Buffer time before an appointment in minutes.
+            buffer_after:
+              type: number
+              description: Buffer time after an appointment in minutes.
+            meeting_duration:
+              type: number
+              description: Default meeting duration in minutes.
+            exception_date:
+              type: string
+              description: Date of the exception in YYYY-MM-DD format (if applicable).
+            note:
+              type: string
+              description: Optional note providing details about the exception.
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 formatted time when the availability update occurred.

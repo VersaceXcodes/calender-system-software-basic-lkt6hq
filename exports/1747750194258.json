@@ -1,0 +1,15 @@
+{
+  "timestamp": 1747750194258,
+  "operation": {
+    "id": "db:postgres"
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/backend/db.sql",
+      "type": "text",
+      "size": 7467,
+      "dependencies": false
+    }
+  ]
+}

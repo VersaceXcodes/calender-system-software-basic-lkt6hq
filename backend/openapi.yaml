@@ -1,0 +1,807 @@
+openapi: 3.0.0
+info:
+  title: SimpleCal API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /auth/signup:
+    post:
+      summary: Register a new organizer account
+      operationId: auth_signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupRequest"
+      responses:
+        "201":
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignupResponse"
+  /auth/login:
+    post:
+      summary: Login and obtain auth token
+      operationId: auth_login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful, returns auth token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+  /auth/logout:
+    post:
+      summary: Logout the current authenticated user
+      operationId: auth_logout
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /auth/password-reset-request:
+    post:
+      summary: Request a password reset token
+      operationId: auth_password_reset_request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetRequest"
+      responses:
+        "200":
+          description: Password reset token generated and sent via email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetResponse"
+  /auth/password-reset:
+    post:
+      summary: Reset password using a valid reset token
+      operationId: auth_password_reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordReset"
+      responses:
+        "200":
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetResult"
+  /users/profile:
+    get:
+      summary: Retrieve the authenticated user's profile
+      operationId: get_user_profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+    put:
+      summary: Update the authenticated user's profile
+      operationId: update_user_profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileUpdate"
+      responses:
+        "200":
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+  /availability/recurring:
+    get:
+      summary: List recurring availability settings for the authenticated user
+      operationId: get_availability_recurring
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Recurring availability records retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AvailabilityRecurring"
+    post:
+      summary: Create a new recurring availability entry
+      operationId: create_availability_recurring
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvailabilityRecurringRequest"
+      responses:
+        "201":
+          description: Recurring availability created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityRecurring"
+  /availability/recurring/{id}:
+    put:
+      summary: Update a recurring availability entry
+      operationId: update_availability_recurring
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvailabilityRecurringRequest"
+      responses:
+        "200":
+          description: Recurring availability updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityRecurring"
+    delete:
+      summary: Delete a recurring availability entry
+      operationId: delete_availability_recurring
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Recurring availability deleted successfully
+  /availability/exceptions:
+    get:
+      summary: List availability exceptions for the authenticated user
+      operationId: get_availability_exceptions
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Availability exceptions retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AvailabilityException"
+    post:
+      summary: Create a new availability exception
+      operationId: create_availability_exception
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvailabilityExceptionRequest"
+      responses:
+        "201":
+          description: Availability exception created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityException"
+  /availability/exceptions/{id}:
+    put:
+      summary: Update an availability exception
+      operationId: update_availability_exception
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AvailabilityExceptionRequest"
+      responses:
+        "200":
+          description: Availability exception updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvailabilityException"
+    delete:
+      summary: Delete an availability exception
+      operationId: delete_availability_exception
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Availability exception deleted successfully
+  /meeting-types:
+    get:
+      summary: List meeting types for the authenticated user
+      operationId: get_meeting_types
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Meeting types retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MeetingType"
+    post:
+      summary: Create a new meeting type
+      operationId: create_meeting_type
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeetingTypeRequest"
+      responses:
+        "201":
+          description: Meeting type created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeetingType"
+  /meeting-types/{id}:
+    put:
+      summary: Update a meeting type
+      operationId: update_meeting_type
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeetingTypeRequest"
+      responses:
+        "200":
+          description: Meeting type updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeetingType"
+    delete:
+      summary: Delete a meeting type
+      operationId: delete_meeting_type
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Meeting type deleted successfully
+  /appointments:
+    get:
+      summary: List appointments for the authenticated organizer
+      operationId: get_appointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional filter (e.g., 'upcoming')
+      responses:
+        "200":
+          description: Appointments retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+    post:
+      summary: Create a new appointment (booking)
+      operationId: create_appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentRequest"
+      responses:
+        "201":
+          description: Appointment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+  /appointments/{id}:
+    put:
+      summary: Update an appointment (reschedule or cancel)
+      operationId: update_appointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentUpdate"
+      responses:
+        "200":
+          description: Appointment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+  /slots:
+    get:
+      summary: Get available time slots for a public scheduling page
+      operationId: get_slots
+      parameters:
+        - name: organizer
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Organizer's username for which to fetch available slots
+      responses:
+        "200":
+          description: Available slots retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Slot"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SignupRequest:
+      type: object
+      required:
+        - email
+        - password
+        - username
+        - name
+        - default_timezone
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        default_timezone:
+          type: string
+        contact_details:
+          type: object
+          additionalProperties: true
+    SignupResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        default_timezone:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        auth_token:
+          type: string
+        user:
+          $ref: "#/components/schemas/SignupResponse"
+    PasswordResetRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+    PasswordResetResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    PasswordReset:
+      type: object
+      required:
+        - reset_token
+        - new_password
+      properties:
+        reset_token:
+          type: string
+        new_password:
+          type: string
+    PasswordResetResult:
+      type: object
+      properties:
+        message:
+          type: string
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        default_timezone:
+          type: string
+        contact_details:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    UserProfileUpdate:
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        default_timezone:
+          type: string
+        contact_details:
+          type: object
+          additionalProperties: true
+    AvailabilityRecurring:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        day_of_week:
+          type: number
+        start_time:
+          type: string
+        end_time:
+          type: string
+        buffer_before:
+          type: number
+        buffer_after:
+          type: number
+        meeting_duration:
+          type: number
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    AvailabilityRecurringRequest:
+      type: object
+      required:
+        - day_of_week
+        - start_time
+        - end_time
+        - buffer_before
+        - buffer_after
+        - meeting_duration
+      properties:
+        day_of_week:
+          type: number
+        start_time:
+          type: string
+        end_time:
+          type: string
+        buffer_before:
+          type: number
+        buffer_after:
+          type: number
+        meeting_duration:
+          type: number
+    AvailabilityException:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        exception_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          nullable: true
+        end_time:
+          type: string
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    AvailabilityExceptionRequest:
+      type: object
+      required:
+        - exception_date
+      properties:
+        exception_date:
+          type: string
+          format: date
+        start_time:
+          type: string
+          nullable: true
+        end_time:
+          type: string
+          nullable: true
+        note:
+          type: string
+          nullable: true
+    MeetingType:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: number
+        is_default:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    MeetingTypeRequest:
+      type: object
+      required:
+        - name
+        - description
+        - duration
+        - is_default
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: number
+        is_default:
+          type: boolean
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+        organizer_id:
+          type: string
+        meeting_type_id:
+          type: string
+        slot_start:
+          type: string
+        slot_end:
+          type: string
+        status:
+          type: string
+        invitee_name:
+          type: string
+        invitee_email:
+          type: string
+        invitee_phone:
+          type: string
+          nullable: true
+        invitee_notes:
+          type: string
+          nullable: true
+        cancellation_token:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    AppointmentRequest:
+      type: object
+      required:
+        - meeting_type_id
+        - slot_start
+        - invitee_name
+        - invitee_email
+      properties:
+        meeting_type_id:
+          type: string
+        slot_start:
+          type: string
+        invitee_name:
+          type: string
+        invitee_email:
+          type: string
+        invitee_phone:
+          type: string
+        invitee_notes:
+          type: string
+    AppointmentUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        slot_start:
+          type: string
+        slot_end:
+          type: string
+    Slot:
+      type: object
+      properties:
+        start_time:
+          type: string
+        end_time:
+          type: string
+        available:
+          type: boolean
+x-websocket-events:
+  slot_locked:
+    description: Emitted when a slot is locked for booking.
+    payload:
+      type: object
+      properties:
+        organizer_id:
+          type: string
+        slot_start:
+          type: string
+        slot_end:
+          type: string
+        lock_expires_at:
+          type: string
+  appointment_created:
+    description: Emitted when a new appointment is created.
+    payload:
+      type: object
+      properties:
+        appointment_id:
+          type: string
+        organizer_id:
+          type: string
+        meeting_type_id:
+          type: string
+        slot_start:
+          type: string
+        slot_end:
+          type: string
+        status:
+          type: string
+        invitee:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+  appointment_updated:
+    description: Emitted when an appointment is updated (rescheduled or cancelled).
+    payload:
+      type: object
+      properties:
+        appointment_id:
+          type: string
+        updated_fields:
+          type: object
+          properties:
+            status:
+              type: string
+            slot_start:
+              type: string
+            slot_end:
+              type: string
+        timestamp:
+          type: string
+  availability_updated:
+    description: Emitted when availability settings are updated.
+    payload:
+      type: object
+      properties:
+        user_id:
+          type: string
+        type:
+          type: string
+          enum:
+            - recurring
+            - exception
+        updated_entry:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string

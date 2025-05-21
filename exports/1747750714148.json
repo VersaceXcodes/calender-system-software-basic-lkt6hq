@@ -1,0 +1,15 @@
+{
+  "timestamp": 1747750714148,
+  "operation": {
+    "id": "backend:server:main"
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/backend/server.js",
+      "type": "text",
+      "size": 28095,
+      "dependencies": false
+    }
+  ]
+}

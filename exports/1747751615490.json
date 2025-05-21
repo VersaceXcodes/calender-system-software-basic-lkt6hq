@@ -1,0 +1,19 @@
+{
+  "timestamp": 1747751615490,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_AppointmentDetails",
+      "version": "latest"
+    }
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/vitereact/src/components/views/UV_AppointmentDetails.tsx",
+      "type": "text",
+      "size": 6208,
+      "dependencies": false
+    }
+  ]
+}

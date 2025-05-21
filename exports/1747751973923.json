@@ -1,0 +1,19 @@
+{
+  "timestamp": 1747751973923,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_NotificationBar",
+      "version": "latest"
+    }
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/vitereact/src/components/views/GV_NotificationBar.tsx",
+      "type": "text",
+      "size": 3324,
+      "dependencies": false
+    }
+  ]
+}

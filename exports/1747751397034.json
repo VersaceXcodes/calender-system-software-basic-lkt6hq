@@ -1,0 +1,19 @@
+{
+  "timestamp": 1747751397034,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_Login",
+      "version": "1747751326965"
+    }
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/vitereact/src/components/views/UV_Login.tsx",
+      "type": "text",
+      "size": 5488,
+      "dependencies": false
+    }
+  ]
+}

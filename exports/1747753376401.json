@@ -1,0 +1,19 @@
+{
+  "timestamp": 1747753376401,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_Footer",
+      "version": "1747753376221"
+    }
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/vitereact/src/components/views/GV_Footer.tsx",
+      "type": "text",
+      "size": 1858,
+      "dependencies": false
+    }
+  ]
+}

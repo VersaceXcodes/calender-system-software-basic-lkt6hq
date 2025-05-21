@@ -1,0 +1,15 @@
+{
+  "timestamp": 1747750323090,
+  "operation": {
+    "id": "backend:specifications:asyncapi"
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/backend/asyncapi.yaml",
+      "type": "text",
+      "size": 7725,
+      "dependencies": false
+    }
+  ]
+}

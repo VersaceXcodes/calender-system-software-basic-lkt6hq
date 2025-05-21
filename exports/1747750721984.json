@@ -1,0 +1,21 @@
+{
+  "timestamp": 1747750721984,
+  "operation": {
+    "id": "settings:config:package"
+  },
+  "projectId": "calender-system-software-basic",
+  "files": [
+    {
+      "path": "../../apps/calender-system-software-basic/backend/package.json",
+      "type": "text",
+      "size": 840,
+      "dependencies": true
+    },
+    {
+      "path": "../../apps/calender-system-software-basic/backend/.env",
+      "type": "text",
+      "size": 631,
+      "dependencies": false
+    }
+  ]
+}
